@@ -44,6 +44,7 @@
 
 using namespace std;
 int xpos[3] = {500, 550, 600};
+int sprites[4][2] = {{0, 0}, {30, 0}, {0, 30}, {30, 30}};
 
 // top viewport for score
 SDL_Rect topViewport;
@@ -70,6 +71,8 @@ MyTexture redTexture;
 MyTexture straightTexture;
 MyTexture laserTexture;
 MyTexture sprLaserTexture;
+MyTexture medChargeTexture;
+MyTexture maxChargeTexture;
 MyTexture badLaserTexture;
 MyTexture homingLaserTexture;
 MyTexture homingTexture;
@@ -187,7 +190,7 @@ bool loadBlueTextures(SDL_Surface** gScreenSurface, SDL_Renderer** gRenderer, My
 }
 
 // Loads yellow texture for laser and green texture for enemy laser
-bool loadLaserTextures(SDL_Surface** gScreenSurface, SDL_Renderer** gRenderer, MyTexture* laserTexture, MyTexture* badLaserTexture, MyTexture* homingLaserTexture, MyTexture* sprLaserTexture) {
+bool loadLaserTextures(SDL_Surface** gScreenSurface, SDL_Renderer** gRenderer, MyTexture* laserTexture, MyTexture* badLaserTexture, MyTexture* homingLaserTexture, MyTexture* sprLaserTexture, MyTexture* medChargeTexture, MyTexture* maxChargeTexture) {
     bool success = true;
     if((*laserTexture).loadFromFile("SDL_Game/laser.png", gScreenSurface, gRenderer, false) == false) {
         printf("Failed to load laser texture.");
@@ -215,6 +218,18 @@ bool loadLaserTextures(SDL_Surface** gScreenSurface, SDL_Renderer** gRenderer, M
         success = false;
     } else {
         (*sprLaserTexture).setBlendMode(SDL_BLENDMODE_BLEND);
+    }
+    if((*medChargeTexture).loadFromFile("SDL_Game/medCharge.png", gScreenSurface, gRenderer, false) == false) {
+        printf("Failed to load bad laser texture.");
+        success = false;
+    } else {
+        (*medChargeTexture).setBlendMode(SDL_BLENDMODE_BLEND);
+    }
+    if((*maxChargeTexture).loadFromFile("SDL_Game/maxCharge.png", gScreenSurface, gRenderer, false) == false) {
+        printf("Failed to load bad laser texture.");
+        success = false;
+    } else {
+        (*maxChargeTexture).setBlendMode(SDL_BLENDMODE_BLEND);
     }
     return success;
 }
@@ -407,7 +422,7 @@ void initializeGame() {
     }
     
     // attempt to load laser textures
-    if(loadLaserTextures(&gScreenSurface, &gRenderer, &laserTexture, &badLaserTexture, &homingLaserTexture, &sprLaserTexture) == false) {
+    if(loadLaserTextures(&gScreenSurface, &gRenderer, &laserTexture, &badLaserTexture, &homingLaserTexture, &sprLaserTexture, &medChargeTexture, &maxChargeTexture) == false) {
         printf("Unable to load laser.\n");
         exit(-1);
     }
@@ -490,6 +505,13 @@ void renderAll() {
         ship.render(&blueHurtTexture, &gRenderer, 0.0);
     } else {
         ship.render(&blueTexture, &gRenderer, 0.0);
+    }
+    
+    // render shield with correct sprite if applicable
+    if(ship.getMode() == 1) {
+        Uint64 ticks = SDL_GetTicks64();
+        int sprite = (ticks / 100) % 4;
+        bubbleShieldTexture.renderPart(ship.getRect().x, ship.getRect().y, &gRenderer, sprites[sprite][0], sprites[sprite][1], 30, 30);
     }
 
     SDL_RenderSetViewport(gRenderer, &topViewport);
@@ -712,7 +734,8 @@ void handleKeyPresses(SDL_Event* e) {
     ship.handleEvent(*e);
     // handles shooting w/ cooldown
     if(keystate[SDL_SCANCODE_SPACE]) {
-        if(ship.getMode() == 0 || ship.getMode() == 1 || ship.getMode() == 3) {
+        // TODO: REMOVE LAST "OR" WHEN CHARGE IS IMPLEMENTED
+        if(ship.getMode() == 0 || ship.getMode() == 1 || ship.getMode() == 3 || ship.getMode() == 4) {
             // Normal / shield / pierce powerup
             if(shotCooldown.getTicks() >= 500 && shotsOnScreen < 5) {
                 shotCooldown.start();

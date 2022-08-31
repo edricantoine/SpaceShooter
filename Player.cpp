@@ -24,7 +24,7 @@ Player::Player() {
     isAlive = true;
     isHit = false;
     hp = 3;
-    mode = 3; //initiaize to "normal" powerup mode (no powerups)
+    mode = 0; //initiaize to "normal" powerup mode (no powerups)
 }
 
 void Player::reset() {
