@@ -16,3 +16,20 @@
 #include <SDL2_mixer/SDL_mixer.h>
 #include <cstdlib>
 #include <ctime>
+
+MedChargeLaser::MedChargeLaser(MyTexture* t, int xpos, int ypos) : MyShot(t) {
+    rectangle.x = xpos;
+    rectangle.y = ypos;
+    rectangle.w = 30;
+    rectangle.h = 10;
+    xvel = 7;
+    yvel = 0;
+    onscreen = true;
+}
+
+void MedChargeLaser::move() {
+    rectangle.x += xvel;
+    if(rectangle.x >= 640) {
+        onscreen = false;
+    }
+}

@@ -1,12 +1,12 @@
 //
-//  MedChargeLaser.hpp
+//  MaxChargeLaser.hpp
 //  SDL_Game
 //
-//  Created by Edric Antoine on 2022-08-30.
+//  Created by Edric Antoine on 2022-09-03.
 //
 
-#ifndef MedChargeLaser_hpp
-#define MedChargeLaser_hpp
+#ifndef MaxChargeLaser_hpp
+#define MaxChargeLaser_hpp
 
 #include <stdio.h>
 #include "MyTexture.hpp"
@@ -19,11 +19,11 @@
 #include <cstdlib>
 #include <ctime>
 
-class MedChargeLaser : public MyShot {
+class MaxChargeLaser : public MyShot {
     public:
-        MedChargeLaser(MyTexture* t, int xpos, int ypos);
+        MaxChargeLaser(MyTexture* t, int xpos, int ypos);
         void move();
-    
+    void render(SDL_Renderer** gRenderer);
 };
 
-#endif /* MedChargeLaser_hpp */
+#endif /* MaxChargeLaser_hpp */

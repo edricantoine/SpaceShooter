@@ -25,7 +25,7 @@ class MyShot {
         MyShot(MyTexture* t);
         virtual ~MyShot();
         virtual void move() = 0;
-        void render(SDL_Renderer** gRenderer);
+        virtual void render(SDL_Renderer** gRenderer);
         void kill(MyTexture* spaceTexture, SDL_Renderer** gRenderer);
         int getXvel();
         int getYvel();

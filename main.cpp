@@ -40,6 +40,8 @@
 #include "PiercePow.hpp"
 #include "ChargePow.hpp"
 #include "MyShot.hpp"
+#include "MedChargeLaser.hpp"
+#include "MaxChargeLaser.hpp"
 #include <vector>
 
 using namespace std;
@@ -65,6 +67,8 @@ SDL_Renderer* gRenderer = NULL;
 // Textures
 MyTexture spaceTexture;
 MyTexture blueTexture;
+MyTexture shipMedTexture;
+MyTexture shipMaxTexture;
 MyTexture blueHurtTexture;
 MyTexture batteryTexture;
 MyTexture redTexture;
@@ -166,7 +170,7 @@ bool loadMediaTextures(SDL_Surface** gScreenSurface, SDL_Renderer** gRenderer, M
 }
 
 // Loads blue texture for ship
-bool loadBlueTextures(SDL_Surface** gScreenSurface, SDL_Renderer** gRenderer, MyTexture* blueTexture, MyTexture* blueHurtTexture, MyTexture* batteryTexture) {
+bool loadBlueTextures(SDL_Surface** gScreenSurface, SDL_Renderer** gRenderer, MyTexture* blueTexture, MyTexture* blueHurtTexture, MyTexture* batteryTexture, MyTexture* shipMedTexture, MyTexture* shipMaxTexture) {
     bool success = true;
     if((*blueTexture).loadFromFile("SDL_Game/finalShip.png", gScreenSurface, gRenderer, false) == false) {
         printf("Failed to load blue texture.");
@@ -185,6 +189,19 @@ bool loadBlueTextures(SDL_Surface** gScreenSurface, SDL_Renderer** gRenderer, My
         success = false;
     } else {
         (*batteryTexture).setBlendMode(SDL_BLENDMODE_BLEND);
+    }
+    if((*shipMaxTexture).loadFromFile("SDL_Game/ShipMaxCharge.png", gScreenSurface, gRenderer, false) == false) {
+        printf("Failed to load blue texture.");
+        success = false;
+    } else {
+        (*shipMaxTexture).setBlendMode(SDL_BLENDMODE_BLEND);
+    }
+    
+    if((*shipMedTexture).loadFromFile("SDL_Game/ShipMedCharge.png", gScreenSurface, gRenderer, false) == false) {
+        printf("Failed to load blue texture.");
+        success = false;
+    } else {
+        (*shipMedTexture).setBlendMode(SDL_BLENDMODE_BLEND);
     }
     return success;
 }
@@ -410,7 +427,7 @@ void initializeGame() {
     }
     
     // attempt to load ship texture
-    if(loadBlueTextures(&gScreenSurface, &gRenderer, &blueTexture, &blueHurtTexture, &batteryTexture) == false) {
+    if(loadBlueTextures(&gScreenSurface, &gRenderer, &blueTexture, &blueHurtTexture, &batteryTexture, &shipMedTexture, &shipMaxTexture) == false) {
         printf("Unable to load blue. ");
         exit(-1);
     }
@@ -504,7 +521,17 @@ void renderAll() {
     if(ship.getHit()) {
         ship.render(&blueHurtTexture, &gRenderer, 0.0);
     } else {
-        ship.render(&blueTexture, &gRenderer, 0.0);
+        if(ship.getMode() == 4) {
+            if(chargeTimer.getTicks() < 1000) {
+                ship.render(&blueTexture, &gRenderer, 0.0);
+            } else if (chargeTimer.getTicks() < 2000) {
+                ship.render(&shipMedTexture, &gRenderer, 0.0);
+            } else {
+                ship.render(&shipMaxTexture, &gRenderer, 0.0);
+            }
+        } else {
+            ship.render(&blueTexture, &gRenderer, 0.0);
+        }
     }
     
     // render shield with correct sprite if applicable
@@ -735,7 +762,7 @@ void handleKeyPresses(SDL_Event* e) {
     // handles shooting w/ cooldown
     if(keystate[SDL_SCANCODE_SPACE]) {
         // TODO: REMOVE LAST "OR" WHEN CHARGE IS IMPLEMENTED
-        if(ship.getMode() == 0 || ship.getMode() == 1 || ship.getMode() == 3 || ship.getMode() == 4) {
+        if(ship.getMode() == 0 || ship.getMode() == 1 || ship.getMode() == 3) {
             // Normal / shield / pierce powerup
             if(shotCooldown.getTicks() >= 500 && shotsOnScreen < 5) {
                 shotCooldown.start();
@@ -760,9 +787,21 @@ void handleKeyPresses(SDL_Event* e) {
         
     } else {
         //cout << chargeTimer.getTicks() << "\n";
-        if(chargeTimer.isStarted()) {
-            chargeTimer.stop();
-            isCharging = false;
+        if(ship.getMode() == 4) {
+            if(chargeTimer.isStarted()) {
+                if(shotCooldown.getTicks() >= 500) {
+                    shotCooldown.start();
+                    if(chargeTimer.getTicks() < 1000) {
+                        myShots.push_back(new GoodLaser(&laserTexture, ship.getRect().x + 15, ship.getRect().y + 15));
+                    } else if(chargeTimer.getTicks() < 2000) {
+                        myShots.push_back(new MedChargeLaser(&medChargeTexture, ship.getRect().x + 15, ship.getRect().y + 15));
+                    } else {
+                        myShots.push_back(new MaxChargeLaser(&maxChargeTexture, ship.getRect().x + 15, ship.getRect().y - 5));
+                    }
+                }
+                chargeTimer.stop();
+                isCharging = false;
+            }
         }
     }
     
