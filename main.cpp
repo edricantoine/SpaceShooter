@@ -109,8 +109,14 @@ MyTexture bubbleShieldTexture;
 // Useless (for now)
 MyMouseButton buttonOne;
 
-// Funky (regular level) music
+// BGM + sound effects
 Mix_Music *music = NULL;
+Mix_Chunk *hurt = NULL;
+Mix_Chunk *shoot = NULL;
+Mix_Chunk *pickup = NULL;
+Mix_Chunk *hitenemy = NULL;
+Mix_Chunk *explode = NULL;
+Mix_Chunk *bigshot = NULL;
 
 // Stringstreams for time, wave, score texts
 std::stringstream timeText;
@@ -406,6 +412,42 @@ bool loadMusic(Mix_Music** gMusic) {
     *gMusic = Mix_LoadMUS("SDL_Game/funky.wav");
     if(*gMusic == NULL) {
         printf("Failed to load funky.wav.\n");
+        success = false;
+    }
+    
+    hurt = Mix_LoadWAV("SDL_Game/hurt.wav");
+    if(hurt == NULL) {
+        printf("Failed to load sfx.\n");
+        success = false;
+    }
+    
+    shoot = Mix_LoadWAV("SDL_Game/shoot.wav");
+    if(shoot == NULL) {
+        printf("Failed to load sfx.\n");
+        success = false;
+    }
+    
+    pickup = Mix_LoadWAV("SDL_Game/pickup.wav");
+    if(pickup == NULL) {
+        printf("Failed to load sfx.\n");
+        success = false;
+    }
+    
+    hitenemy = Mix_LoadWAV("SDL_Game/hitenemy.wav");
+    if(hitenemy == NULL) {
+        printf("Failed to load sfx.\n");
+        success = false;
+    }
+    
+    explode = Mix_LoadWAV("SDL_Game/explode.wav");
+    if(explode == NULL) {
+        printf("Failed to load sfx.\n");
+        success = false;
+    }
+    
+    bigshot = Mix_LoadWAV("SDL_Game/bigshot.wav");
+    if(bigshot == NULL) {
+        printf("Failed to load sfx.\n");
         success = false;
     }
     return success;
@@ -730,6 +772,7 @@ void handlePowerups() {
                 SDL_Rect r2 = ship.getRect();
                 if(SDL_HasIntersection(&r1, &r2) == SDL_TRUE) {
                     powerups[i]->takeEffect(ship);
+                    Mix_PlayChannel(-1, pickup, 0);
                 }
             }
         }
@@ -767,6 +810,7 @@ void handleKeyPresses(SDL_Event* e) {
             if(shotCooldown.getTicks() >= 500 && shotsOnScreen < 5) {
                 shotCooldown.start();
                 myShots.push_back(new GoodLaser(&laserTexture, ship.getRect().x + 15, ship.getRect().y + 15));
+                Mix_PlayChannel(-1, shoot, 0);
             }
         } else if (ship.getMode() == 2) {
             if(shotCooldown.getTicks() >= 500) {
@@ -774,6 +818,7 @@ void handleKeyPresses(SDL_Event* e) {
                 myShots.push_back(new SpreadLaser(&sprLaserTexture, ship.getRect().x + 15, ship.getRect().y + 15, 5, 0));
                 myShots.push_back(new SpreadLaser(&sprLaserTexture, ship.getRect().x + 15, ship.getRect().y + 15, 3, 4));
                 myShots.push_back(new SpreadLaser(&sprLaserTexture, ship.getRect().x + 15, ship.getRect().y + 15, 3, -4));
+                Mix_PlayChannel(-1, shoot, 0);
             }
         } else if (ship.getMode() == 4) {
             // Charge powerup
@@ -793,10 +838,13 @@ void handleKeyPresses(SDL_Event* e) {
                     shotCooldown.start();
                     if(chargeTimer.getTicks() < 1000) {
                         myShots.push_back(new GoodLaser(&laserTexture, ship.getRect().x + 15, ship.getRect().y + 15));
+                        Mix_PlayChannel(-1, shoot, 0);
                     } else if(chargeTimer.getTicks() < 2000) {
                         myShots.push_back(new MedChargeLaser(&medChargeTexture, ship.getRect().x + 15, ship.getRect().y + 15));
+                        Mix_PlayChannel(-1, shoot, 0);
                     } else {
                         myShots.push_back(new MaxChargeLaser(&maxChargeTexture, ship.getRect().x + 15, ship.getRect().y - 5));
+                        Mix_PlayChannel(-1, bigshot, 0);
                     }
                 }
                 chargeTimer.stop();
@@ -845,6 +893,7 @@ void handleHitShot() {
                 if(SDL_HasIntersection(&r1, &r2) == SDL_TRUE && ship.getHit() == false) {
                     ship.kill(&spaceTexture, &gRenderer);
                     ship.onHit();
+                    Mix_PlayChannel(-1, hurt, 0);
                     if(ship.getAlive() == false) {
                         gameOver();
                         break;
@@ -896,11 +945,13 @@ void handleShootEnemy() {
 
                         }
                         currentWave.getBaddies()[subWaveNum][j]->onHit();
+                        Mix_PlayChannel(-1, hitenemy, 0);
                         currentWave.getBaddies()[subWaveNum][j]->kill(&spaceTexture, &gRenderer);
                         if(ship.getMode() != 3) {
                             myShots[i]->kill(&spaceTexture, &gRenderer);
                         }
                         if(currentWave.getBaddies()[subWaveNum][j]->getDead()) {
+                            Mix_PlayChannel(-1, explode, 0);
                             playerScore += 10;
                         }
                     } else {
@@ -928,10 +979,12 @@ void handleShootEnemy() {
                             }
                             currentWave.getBaddies()[subWaveNum][j]->onHit();
                             currentWave.getBaddies()[subWaveNum][j]->kill(&spaceTexture, &gRenderer);
+                            Mix_PlayChannel(-1, hitenemy, 0);
                             if(ship.getMode() != 3) {
                                 myShots[i]->kill(&spaceTexture, &gRenderer);
                             }
                             if(currentWave.getBaddies()[subWaveNum][j]->getDead()) {
+                                Mix_PlayChannel(-1, explode, 0);
                                 playerScore += 10;
                             }
                         }
@@ -1032,6 +1085,18 @@ int main(int argc, const char * argv[]) {
         }
     }
     close(&gWindow, &gTestImg, &gRenderer, &music);
+    Mix_FreeChunk(hurt);
+    Mix_FreeChunk(shoot);
+    Mix_FreeChunk(pickup);
+    Mix_FreeChunk(hitenemy);
+    Mix_FreeChunk(explode);
+    Mix_FreeChunk(bigshot);
+    hurt = NULL;
+    shoot = NULL;
+    pickup = NULL;
+    hitenemy = NULL;
+    explode = NULL;
+    bigshot = NULL;
     spaceTexture.free();
     return 0;
 }

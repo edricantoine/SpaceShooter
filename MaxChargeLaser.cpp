@@ -43,3 +43,7 @@ void MaxChargeLaser::render(SDL_Renderer** gRenderer) {
         (*texture).renderPart(rectangle.x, rectangle.y, gRenderer, 0, 40, 40, 40);
     }
 }
+
+void MaxChargeLaser::kill(MyTexture* spaceTexture, SDL_Renderer** gRenderer) {
+    return;
+}

@@ -18,7 +18,7 @@ Enemies:
 
 Misc:
 - Finish waves, make them loop
-- Boss music
+- Boss and title screen music
 - SFX
 - Add explosion death animation for enemies
 - Pause menu, with option to return to the title screen

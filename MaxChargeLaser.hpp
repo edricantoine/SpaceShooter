@@ -23,7 +23,8 @@ class MaxChargeLaser : public MyShot {
     public:
         MaxChargeLaser(MyTexture* t, int xpos, int ypos);
         void move();
-    void render(SDL_Renderer** gRenderer);
+        void render(SDL_Renderer** gRenderer);
+        void kill(MyTexture* spaceTexture, SDL_Renderer** gRenderer);
 };
 
 #endif /* MaxChargeLaser_hpp */
