@@ -724,6 +724,9 @@ void endWave() {
     powerups.clear();
     // sets subwave num to 0, increases wave num
     waveNum++;
+    if(waveNum > 20) {
+        waveNum = 1;
+    }
     subWaveNum = 0;
     if(isCharging) {
         isCharging = false;
