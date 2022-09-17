@@ -7,7 +7,7 @@ I hope you enjoy!
 
 ### To run this project:
 
-Use the executable file in this folder. DO NOT CHANGE FOLDER STRUCTURE OR THE GAME WON'T WORK!
+Use the executable file "SpaceShooters" in the outermost folder. DO NOT CHANGE FOLDER STRUCTURE OR THE GAME WON'T WORK!
 
 NOTE: THIS IS CURRENTLY A WORK IN PROGRESS.
 
