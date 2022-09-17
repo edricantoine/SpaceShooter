@@ -7,7 +7,7 @@ I hope you enjoy!
 
 ### To run this project:
 
-(An executable file will be included with this repo in the future, check back later)
+Use the executable file in this folder. DO NOT CHANGE FOLDER STRUCTURE OR THE GAME WON'T WORK!
 
 NOTE: THIS IS CURRENTLY A WORK IN PROGRESS.
 
