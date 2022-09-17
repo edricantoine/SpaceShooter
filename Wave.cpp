@@ -182,6 +182,7 @@ Wave::Wave(int waveNum) {
                 v3.push_back(new Enemy());
             }
             baddies.push_back(v3);
+            break;
         }
         case 10: {
             vector<BadGuy*> v;
@@ -214,12 +215,53 @@ Wave::Wave(int waveNum) {
             break;
         }
         case 12: {
+            vector<BadGuy*> v;
+            for(int i = 0; i < 4; i++) {
+                v.push_back(new SpreadShooter());
+            }
+            for(int i = 0; i < 1; i++) {
+                v.push_back(new Enemy());
+            }
+            baddies.push_back(v);
+            vector<BadGuy*> v2;
+            for(int i = 0; i < 3; i++) {
+                v2.push_back(new StraightShooter());
+            }
+            for(int i = 0; i < 2; i++) {
+                v2.push_back(new SpreadShooter());
+            }
+            baddies.push_back(v2);
             break;
         }
         case 13: {
+            vector<BadGuy*> v;
+            for(int i = 0; i < 4; i++) {
+                v.push_back(new SpreadShooter());
+            }
             break;
         }
         case 14: {
+            vector<BadGuy*> v;
+            for(int i = 0; i < 4; i++) {
+                v.push_back(new StraightShooter());
+            }
+            for(int i = 0; i < 3; i++) {
+                v.push_back(new HomingTurret());
+            }
+            baddies.push_back(v);
+            vector<BadGuy*> v2;
+            for(int i = 0; i < 5; i++) {
+                v2.push_back(new Enemy());
+            }
+            for(int i = 0; i < 5; i++) {
+                v2.push_back(new HomingTurret());
+            }
+            baddies.push_back(v2);
+            vector<BadGuy*> v3;
+            for(int i = 0; i < 5; i++) {
+                v3.push_back(new SpreadShooter());
+            }
+            baddies.push_back(v3);
             break;
         }
         case 15: {
@@ -234,12 +276,69 @@ Wave::Wave(int waveNum) {
             break;
         }
         case 16: {
+            vector<BadGuy*> v;
+            for(int i = 0; i < 3; i++) {
+                v.push_back(new StraightShooter());
+            }
+            for(int i = 0; i < 1; i++) {
+                v.push_back(new SpreadShooter());
+            }
+            baddies.push_back(v);
+            vector<BadGuy*> v2;
+            for(int i = 0; i < 3; i++) {
+                v2.push_back(new HomingTurret());
+            }
+            for(int i = 0; i < 2; i++) {
+                v2.push_back(new SpreadShooter());
+            }
+            for(int i = 0; i < 1; i++) {
+                v.push_back(new Orbiter());
+            }
+            baddies.push_back(v2);
             break;
         }
         case 17: {
+            vector<BadGuy*> v;
+            for(int i = 0; i < 8; i++) {
+                v.push_back(new Enemy());
+            }
+            for(int i = 0; i < 1; i++) {
+                v.push_back(new Orbiter());
+            }
+            baddies.push_back(v);
+            vector<BadGuy*> v2;
+            for(int i = 0; i < 2; i++) {
+                v2.push_back(new HomingTurret());
+            }
+            for(int i = 0; i < 5; i++) {
+                v2.push_back(new StraightShooter());
+            }
+            for(int i = 0; i < 1; i++) {
+                v.push_back(new Orbiter());
+            }
+            baddies.push_back(v2);
             break;
         }
         case 18: {
+            vector<BadGuy*> v;
+            for(int i = 0; i < 3; i++) {
+                v.push_back(new SpreadShooter());
+            }
+            for(int i = 0; i < 3; i++) {
+                v.push_back(new HomingTurret());
+            }
+            for(int i = 0; i < 1; i++) {
+                v.push_back(new Orbiter());
+            }
+            baddies.push_back(v);
+            vector<BadGuy*> v2;
+            for(int i = 0; i < 3; i++) {
+                v2.push_back(new Enemy());
+            }
+            for(int i = 0; i < 4; i++) {
+                v2.push_back(new HomingTurret());
+            }
+            baddies.push_back(v2);
             break;
         }
         case 19: {
@@ -250,6 +349,9 @@ Wave::Wave(int waveNum) {
             for(int i = 0; i < 3; i++) {
                 v.push_back(new HomingTurret());
             }
+            for(int i = 0; i < 1; i++) {
+                v.push_back(new Orbiter());
+            }
             baddies.push_back(v);
             vector<BadGuy*> v2;
             for(int i = 0; i < 5; i++) {
@@ -257,6 +359,9 @@ Wave::Wave(int waveNum) {
             }
             for(int i = 0; i < 3; i++) {
                 v2.push_back(new HomingTurret());
+            }
+            for(int i = 0; i < 1; i++) {
+                v2.push_back(new Orbiter());
             }
             baddies.push_back(v2);
             vector<BadGuy*> v3;
