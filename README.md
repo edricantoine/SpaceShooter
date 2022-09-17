@@ -17,7 +17,6 @@ Enemies:
 - Boss: Takes many hits, complex attack pattern
 
 Misc:
-- Finish waves, make them loop
 - Boss and title screen music
 - SFX
 - Add explosion death animation for enemies
