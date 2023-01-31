@@ -1,6 +1,8 @@
 # SpaceShooters
 ## A retro-inspired 2D shoot-'em-up game.
 
+## ARCHIVED. DON'T USE
+
 This application is a simple 2D shoot-'em-up game (think Space Invaders), which I decided to create as a way to get some practice with the C++ language as well as learn the basics of game development using the SDL2 graphics framework. I think the gameplay is simple enough to understand, and doesn't really require much explaining.
 
 I hope you enjoy!
